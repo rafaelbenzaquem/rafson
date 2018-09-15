@@ -7,12 +7,12 @@ import org.mockserver.client.server.MockServerClient;
 import org.mockserver.integration.ClientAndProxy;
 import org.mockserver.integration.ClientAndServer;
 
-import static org.junit.Assert.*;
-import static org.mockserver.integration.ClientAndProxy.*;
-import static org.mockserver.integration.ClientAndServer.*;
-import static org.mockserver.model.HttpRequest.*;
-import static org.mockserver.model.HttpResponse.*;
-import static org.mockserver.model.JsonBody.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockserver.integration.ClientAndProxy.startClientAndProxy;
+import static org.mockserver.integration.ClientAndServer.startClientAndServer;
+import static org.mockserver.model.HttpRequest.request;
+import static org.mockserver.model.HttpResponse.response;
+import static org.mockserver.model.JsonBody.json;
 
 public class RafsonTest {
 
