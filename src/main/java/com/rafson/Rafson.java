@@ -3,7 +3,10 @@ package com.rafson;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,5 +35,26 @@ public class Rafson {
         }
 
         return response.toString();
+    }
+
+    public Map<String, List<String>> head(String spec) {
+        Map<String, List<String>> headerFields = new TreeMap<>();
+        try {
+            URL url = new URL(spec);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Content-type", "application/json;charset=UTF-8");
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setDoOutput(true);
+            connection.setConnectTimeout(2000);
+            connection.connect();
+            System.out.println("GET HTTP CODE" + connection.getResponseCode());
+            headerFields = connection.getHeaderFields();
+
+            connection.disconnect();
+        } catch (IOException ex) {
+            Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return headerFields;
     }
 }
