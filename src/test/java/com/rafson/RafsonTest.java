@@ -61,6 +61,26 @@ public class RafsonTest {
     }
 
     @Test
+    public void testRestHeadResponseSuccess() {
+        new MockServerClient("localhost", 1080)
+                .when(
+                        request()
+                                .withMethod("GET")
+                                .withPath("/test")
+                )
+                .respond(
+                        response()
+                                .withStatusCode(200)
+                                .withHeader(
+                                        "Location", "http://localhost"
+                                )
+                );
+        Map<String, List<String>> headerField = new Rafson().head("http://localhost:1080/test");
+        String expected = headerField.get("Location").get(0);
+        assertEquals(expected, "http://localhost");
+    }
+
+    @Test
     public void testRestPostResponseSuccess() {
 
         String jsonInput = "{\n"
