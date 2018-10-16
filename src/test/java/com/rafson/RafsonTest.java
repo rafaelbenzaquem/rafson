@@ -61,25 +61,82 @@ public class RafsonTest {
     }
 
     @Test
-    public void testRestHeadResponseSuccess() {
+    public void testRestPostResponseSuccess() {
+
+        String jsonInput = "{\n"
+                + "\"nome\" : \"João da Silva\",\n"
+                + "\"email\" : \"joao@gmail.com\",\n"
+                + "\"cpfOuCnpj\" : \"77643070253\",\n"
+                + "\"tipo\" : 1,\n"
+                + "\"telefone1\" : \"997723874\",\n"
+                + "\"telefone2\" : \"32547698\",\n"
+                + "\"logradouro\" : \"Rua das Acácias\",\n"
+                + "\"numero\" : \"345\",\n"
+                + "\"complemento\" : \"Apto 302\",\n"
+                + "\"bairro\":\"Aldeia\",\n"
+                + "\"cep\" : \"38746928\",\n"
+                + "\"cidadeId\" : 2\n"
+                + "}";
         new MockServerClient("localhost", 1080)
                 .when(
                         request()
-                                .withMethod("GET")
-                                .withPath("/test")
+                                .withMethod("POST")
+                                .withPath("/clientes")
+                                .withBody(jsonInput)
                 )
                 .respond(
                         response()
-                                .withStatusCode(200)
+                                .withStatusCode(201)
                                 .withHeader(
-                                        "Location", "http://localhost"
+                                        "Location", "http://localhost:1080/clientes/2"
                                 )
                 );
+        Map<String, List<String>> fields = new Rafson().post("http://localhost:1080/clientes", jsonInput);
+        for (String key : fields.keySet()) {
+            System.out.println("\nPOST KEY = " + key);
 
-        Map<String, List<String>> headerField = new Rafson().head("http://localhost:1080/test");
-        String expected = headerField.get("Location").get(0);
-        assertEquals(expected, "http://localhost");
+            System.out.println("POST HEADER FIELDS = " + fields.get(key).toString());
 
+        }
+    }
+
+    @Test
+    public void testRestPutResponseSuccess() {
+
+        String jsonInput = "{\n"
+                + "\"nome\" : \"João da Silva\",\n"
+                + "\"email\" : \"joao@gmail.com\",\n"
+                + "\"cpfOuCnpj\" : \"77643070253\",\n"
+                + "\"tipo\" : 1,\n"
+                + "\"telefone1\" : \"997723874\",\n"
+                + "\"telefone2\" : \"32547698\",\n"
+                + "\"logradouro\" : \"Rua das Acácias\",\n"
+                + "\"numero\" : \"345\",\n"
+                + "\"complemento\" : \"Apto 302\",\n"
+                + "\"bairro\":\"Aldeia\",\n"
+                + "\"cep\" : \"38746928\",\n"
+                + "\"cidadeId\" : 2\n"
+                + "}";
+        new MockServerClient("localhost", 1080)
+                .when(
+                        request()
+                                .withMethod("PUT")
+                                .withPath("/clientes/2")
+                                .withBody(jsonInput)
+                )
+                .respond(
+                        response()
+                                .withStatusCode(204)
+                );
+        System.out.println(jsonInput);
+
+        Map<String, List<String>> fields = new Rafson().put("http://localhost:1080/clientes/2", jsonInput);
+        for (String key : fields.keySet()) {
+            System.out.println("\nPUT KEY = " + key);
+
+            System.out.println("PUT HEADER FIELDS = " + fields.get(key).toString());
+
+        }
     }
 
 }
