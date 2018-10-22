@@ -55,8 +55,12 @@ public class RafsonTest {
                                 )
                 );
 
-        String actual = new Rafson().get("http://localhost:1080/test");
+        Response response = new Rafson().get("http://localhost:1080/test");
+        String actual = response.getBody();
         assertEquals(expected, actual);
+
+        String actual2 = response.getHeader().get(null).get(0);
+        assertEquals("HTTP/1.1 200 OK", actual2);
 
     }
 

@@ -14,8 +14,9 @@ import java.util.logging.Logger;
 public class Rafson {
 
 
-    public String get(String uri) {
-        StringBuilder response = new StringBuilder();
+    public Response get(String uri) {
+        Map<String, List<String>> header = new TreeMap<>();
+        StringBuilder bodyBuilder = new StringBuilder();
         try {
             URL url = new URL(uri);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -26,20 +27,23 @@ public class Rafson {
             connection.setConnectTimeout(2000);
             connection.connect();
             System.out.println("GET HTTP CODE" + connection.getResponseCode());
+
+            header = connection.getHeaderFields();
+
             Scanner scanner = new Scanner(url.openStream(), "UTF-8");
             while (scanner.hasNext()) {
-                response.append(scanner.nextLine());
+                bodyBuilder.append(scanner.nextLine());
             }
             connection.disconnect();
         } catch (IOException ex) {
             Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return response.toString();
+        return new Response(bodyBuilder.toString(),header);
     }
 
     public Map<String, List<String>> post(String uri, String jsonInput) {
-        Map<String,List<String>> map = new HashMap<>();
+        Map<String, List<String>> map = new HashMap<>();
         URL url = null;
         try {
             url = new URL(uri);
@@ -84,7 +88,7 @@ public class Rafson {
     }
 
     public Map<String, List<String>> put(String uri, String jsonInput) {
-        Map<String,List<String>> map = new HashMap<>();
+        Map<String, List<String>> header = new HashMap<>();
         URL url = null;
         try {
             url = new URL(uri);
@@ -122,16 +126,16 @@ public class Rafson {
                     Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-                map = connection.getHeaderFields();
+                header = connection.getHeaderFields();
             }
         }
-        return map;
+        return header;
     }
 
-    public Map<String, List<String>> head(String spec) {
-        Map<String, List<String>> headerFields = new TreeMap<>();
+    public Map<String, List<String>> head(String uri) {
+        Map<String, List<String>> header = new TreeMap<>();
         try {
-            URL url = new URL(spec);
+            URL url = new URL(uri);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Content-type", "application/json;charset=UTF-8");
@@ -140,18 +144,18 @@ public class Rafson {
             connection.setConnectTimeout(2000);
             connection.connect();
             System.out.println("HEAD HTTP CODE" + connection.getResponseCode());
-            headerFields = connection.getHeaderFields();
+            header = connection.getHeaderFields();
             connection.disconnect();
         } catch (IOException ex) {
             Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return headerFields;
+        return header;
     }
 
-    public Map<String, List<String>> delete(String spec) {
-        Map<String, List<String>> headerFields = new TreeMap<>();
+    public Map<String, List<String>> delete(String uri) {
+        Map<String, List<String>> header = new TreeMap<>();
         try {
-            URL url = new URL(spec);
+            URL url = new URL(uri);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("DELETE");
             connection.setRequestProperty("Content-type", "application/json;charset=UTF-8");
@@ -160,11 +164,11 @@ public class Rafson {
             connection.setConnectTimeout(2000);
             connection.connect();
             System.out.println("DELETE HTTP CODE" + connection.getResponseCode());
-            headerFields = connection.getHeaderFields();
+            header = connection.getHeaderFields();
             connection.disconnect();
         } catch (IOException ex) {
             Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return headerFields;
+        return header;
     }
 }
