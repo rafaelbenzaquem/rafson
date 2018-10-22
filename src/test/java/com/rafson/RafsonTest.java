@@ -75,9 +75,12 @@ public class RafsonTest {
                                         "Location", "http://localhost"
                                 )
                 );
-        Map<String, List<String>> headerField = new Rafson().head("http://localhost:1080/test");
-        String expected = headerField.get("Location").get(0);
+        Map<String, List<String>> fields = new Rafson().head("http://localhost:1080/test");
+        String expected = fields.get("Location").get(0);
         assertEquals(expected, "http://localhost");
+
+        String expected2 = fields.get(null).get(0);
+        assertEquals("HTTP/1.1 200 OK", expected2);
     }
 
     @Test
@@ -112,12 +115,8 @@ public class RafsonTest {
                                 )
                 );
         Map<String, List<String>> fields = new Rafson().post("http://localhost:1080/clientes", jsonInput);
-        for (String key : fields.keySet()) {
-            System.out.println("\nPOST KEY = " + key);
-
-            System.out.println("POST HEADER FIELDS = " + fields.get(key).toString());
-
-        }
+        String expected = fields.get(null).get(0);
+        assertEquals("HTTP/1.1 201 Created", expected);
     }
 
     @Test
@@ -151,12 +150,28 @@ public class RafsonTest {
         System.out.println(jsonInput);
 
         Map<String, List<String>> fields = new Rafson().put("http://localhost:1080/clientes/2", jsonInput);
-        for (String key : fields.keySet()) {
-            System.out.println("\nPUT KEY = " + key);
+        String expected = fields.get(null).get(0);
+        assertEquals("HTTP/1.1 204 No Content", expected);
+    }
 
-            System.out.println("PUT HEADER FIELDS = " + fields.get(key).toString());
+    @Test
+    public void testRestDeleteResponseSuccess() {
 
-        }
+        new MockServerClient("localhost", 1080)
+                .when(
+                        request()
+                                .withMethod("DELETE")
+                                .withPath("/client/2")
+                )
+                .respond(
+                        response()
+                                .withStatusCode(204)
+                );
+
+        Map<String, List<String>> fields = new Rafson().delete("http://localhost:1080/client/2");
+        String expected = fields.get(null).get(0);
+        assertEquals("HTTP/1.1 204 No Content", expected);
+
     }
 
 }

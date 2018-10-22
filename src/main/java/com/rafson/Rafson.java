@@ -139,7 +139,27 @@ public class Rafson {
             connection.setDoOutput(true);
             connection.setConnectTimeout(2000);
             connection.connect();
-            System.out.println("GET HTTP CODE" + connection.getResponseCode());
+            System.out.println("HEAD HTTP CODE" + connection.getResponseCode());
+            headerFields = connection.getHeaderFields();
+            connection.disconnect();
+        } catch (IOException ex) {
+            Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return headerFields;
+    }
+
+    public Map<String, List<String>> delete(String spec) {
+        Map<String, List<String>> headerFields = new TreeMap<>();
+        try {
+            URL url = new URL(spec);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("DELETE");
+            connection.setRequestProperty("Content-type", "application/json;charset=UTF-8");
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setDoOutput(true);
+            connection.setConnectTimeout(2000);
+            connection.connect();
+            System.out.println("DELETE HTTP CODE" + connection.getResponseCode());
             headerFields = connection.getHeaderFields();
             connection.disconnect();
         } catch (IOException ex) {
