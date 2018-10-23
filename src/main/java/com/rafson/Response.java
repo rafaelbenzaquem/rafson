@@ -5,10 +5,10 @@ import java.util.Map;
 
 public class Response {
 
-    private String body;
     private Map<String, List<String>> header;
+    private String body;
 
-    public Response(String body, Map<String, List<String>> header) {
+    public Response(Map<String, List<String>> header, String body) {
         this.body = body;
         this.header = header;
     }

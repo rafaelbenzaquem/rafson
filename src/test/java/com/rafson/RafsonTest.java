@@ -79,11 +79,11 @@ public class RafsonTest {
                                         "Location", "http://localhost"
                                 )
                 );
-        Map<String, List<String>> fields = new Rafson().head("http://localhost:1080/test");
-        String expected = fields.get("Location").get(0);
+        Response response = new Rafson().head("http://localhost:1080/test");
+        String expected = response.getHeader().get("Location").get(0);
         assertEquals(expected, "http://localhost");
 
-        String expected2 = fields.get(null).get(0);
+        String expected2 =response.getHeader().get(null).get(0);
         assertEquals("HTTP/1.1 200 OK", expected2);
     }
 
@@ -118,8 +118,8 @@ public class RafsonTest {
                                         "Location", "http://localhost:1080/clientes/2"
                                 )
                 );
-        Map<String, List<String>> fields = new Rafson().post("http://localhost:1080/clientes", jsonInput);
-        String expected = fields.get(null).get(0);
+        Response response = new Rafson().post("http://localhost:1080/clientes", jsonInput);
+        String expected = response.getHeader().get(null).get(0);
         assertEquals("HTTP/1.1 201 Created", expected);
     }
 
@@ -153,8 +153,8 @@ public class RafsonTest {
                 );
         System.out.println(jsonInput);
 
-        Map<String, List<String>> fields = new Rafson().put("http://localhost:1080/clientes/2", jsonInput);
-        String expected = fields.get(null).get(0);
+        Response response = new Rafson().put("http://localhost:1080/clientes/2", jsonInput);
+        String expected = response.getHeader().get(null).get(0);
         assertEquals("HTTP/1.1 204 No Content", expected);
     }
 
@@ -172,8 +172,8 @@ public class RafsonTest {
                                 .withStatusCode(204)
                 );
 
-        Map<String, List<String>> fields = new Rafson().delete("http://localhost:1080/client/2");
-        String expected = fields.get(null).get(0);
+        Response response = new Rafson().delete("http://localhost:1080/client/2");
+        String expected = response.getHeader().get(null).get(0);
         assertEquals("HTTP/1.1 204 No Content", expected);
 
     }

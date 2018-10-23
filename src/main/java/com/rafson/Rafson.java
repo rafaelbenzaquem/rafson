@@ -39,11 +39,11 @@ public class Rafson {
             Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return new Response(bodyBuilder.toString(),header);
+        return new Response(header, bodyBuilder.toString());
     }
 
-    public Map<String, List<String>> post(String uri, String jsonInput) {
-        Map<String, List<String>> map = new HashMap<>();
+    public Response post(String uri, String jsonInput) {
+        Map<String, List<String>> header = new HashMap<>();
         URL url = null;
         try {
             url = new URL(uri);
@@ -81,13 +81,13 @@ public class Rafson {
                     Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-                map = connection.getHeaderFields();
+                header = connection.getHeaderFields();
             }
         }
-        return map;
+        return new Response(header, null);
     }
 
-    public Map<String, List<String>> put(String uri, String jsonInput) {
+    public Response put(String uri, String jsonInput) {
         Map<String, List<String>> header = new HashMap<>();
         URL url = null;
         try {
@@ -129,10 +129,10 @@ public class Rafson {
                 header = connection.getHeaderFields();
             }
         }
-        return header;
+        return new Response(header, null);
     }
 
-    public Map<String, List<String>> head(String uri) {
+    public Response head(String uri) {
         Map<String, List<String>> header = new TreeMap<>();
         try {
             URL url = new URL(uri);
@@ -149,10 +149,10 @@ public class Rafson {
         } catch (IOException ex) {
             Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return header;
+        return new Response(header, null);
     }
 
-    public Map<String, List<String>> delete(String uri) {
+    public Response delete(String uri) {
         Map<String, List<String>> header = new TreeMap<>();
         try {
             URL url = new URL(uri);
@@ -169,6 +169,6 @@ public class Rafson {
         } catch (IOException ex) {
             Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return header;
+        return new Response(header, null);
     }
 }
