@@ -34,6 +34,7 @@ public class Rafson {
 
             System.out.println("GET HTTP CODE " + connection.getResponseCode());
             header = connection.getHeaderFields();
+
             connection.disconnect();
         } catch (IOException ex) {
             Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
@@ -63,6 +64,7 @@ public class Rafson {
 
             System.out.println("POST HTTP CODE " + connection.getResponseCode());
             header = connection.getHeaderFields();
+
             connection.disconnect();
         } catch (IOException ex) {
             Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
