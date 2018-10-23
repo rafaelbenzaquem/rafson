@@ -69,7 +69,7 @@ public class RafsonTest {
         new MockServerClient("localhost", 1080)
                 .when(
                         request()
-                                .withMethod("GET")
+                                .withMethod("HEAD")
                                 .withPath("/test")
                 )
                 .respond(
@@ -151,8 +151,6 @@ public class RafsonTest {
                         response()
                                 .withStatusCode(204)
                 );
-        System.out.println(jsonInput);
-
         Response response = new Rafson().put("http://localhost:1080/clientes/2", jsonInput);
         String expected = response.getHeader().get(null).get(0);
         assertEquals("HTTP/1.1 204 No Content", expected);

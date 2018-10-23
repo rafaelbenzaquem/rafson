@@ -26,14 +26,14 @@ public class Rafson {
             connection.setDoOutput(true);
             connection.setConnectTimeout(2000);
             connection.connect();
-            System.out.println("GET HTTP CODE" + connection.getResponseCode());
-
-            header = connection.getHeaderFields();
 
             Scanner scanner = new Scanner(url.openStream(), "UTF-8");
             while (scanner.hasNext()) {
                 bodyBuilder.append(scanner.nextLine());
             }
+
+            System.out.println("GET HTTP CODE " + connection.getResponseCode());
+            header = connection.getHeaderFields();
             connection.disconnect();
         } catch (IOException ex) {
             Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
@@ -44,90 +44,53 @@ public class Rafson {
 
     public Response post(String uri, String jsonInput) {
         Map<String, List<String>> header = new HashMap<>();
-        URL url = null;
         try {
-            url = new URL(uri);
-        } catch (MalformedURLException ex) {
+            URL url = new URL(uri);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-type", "application/json;charset=UTF-8");
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setDoOutput(true);
+            connection.setConnectTimeout(2000);
+            connection.connect();
+
+
+
+            OutputStreamWriter os = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
+            os.write(jsonInput);
+            os.flush();
+            os.close();
+
+            System.out.println("POST HTTP CODE " + connection.getResponseCode());
+            header = connection.getHeaderFields();
+            connection.disconnect();
+        } catch (IOException ex) {
             Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (url != null) {
-            HttpURLConnection connection = null;
-            try {
-                connection = (HttpURLConnection) url.openConnection();
-            } catch (IOException ex) {
-                Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            if (connection != null) {
-                try {
-                    connection.setRequestMethod("POST");
-                } catch (ProtocolException ex) {
-                    Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-                connection.setRequestProperty("Content-type", "application/json;charset=UTF-8");
-                connection.setRequestProperty("Accept", "application/json");
-                connection.setDoOutput(true);
-
-                try {
-                    connection.connect();
-                    try (OutputStreamWriter os = new OutputStreamWriter(connection.getOutputStream(), "UTF-8")) {
-
-                        os.write(jsonInput);
-                        os.flush();
-                    } catch (UnsupportedEncodingException ex) {
-                        Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                } catch (IOException ex) {
-                    Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-                header = connection.getHeaderFields();
-            }
         }
         return new Response(header, null);
     }
 
     public Response put(String uri, String jsonInput) {
         Map<String, List<String>> header = new HashMap<>();
-        URL url = null;
         try {
-            url = new URL(uri);
-        } catch (MalformedURLException ex) {
+            URL url = new URL(uri);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("PUT");
+            connection.setRequestProperty("Content-type", "application/json;charset=UTF-8");
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setDoOutput(true);
+            connection.connect();
+
+            OutputStreamWriter os = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
+            os.write(jsonInput);
+            os.flush();
+            os.close();
+
+            System.out.println("PUT HTTP CODE " + connection.getResponseCode());
+            header = connection.getHeaderFields();
+            connection.disconnect();
+        } catch (IOException ex) {
             Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (url != null) {
-            HttpURLConnection connection = null;
-            try {
-                connection = (HttpURLConnection) url.openConnection();
-            } catch (IOException ex) {
-                Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            if (connection != null) {
-                try {
-                    connection.setRequestMethod("PUT");
-                } catch (ProtocolException ex) {
-                    Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-                connection.setRequestProperty("Content-type", "application/json;charset=UTF-8");
-                connection.setRequestProperty("Accept", "application/json");
-                connection.setDoOutput(true);
-
-                try {
-                    connection.connect();
-                    try (OutputStreamWriter os = new OutputStreamWriter(connection.getOutputStream(), "UTF-8")) {
-
-                        os.write(jsonInput);
-                        os.flush();
-                    } catch (UnsupportedEncodingException ex) {
-                        Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                } catch (IOException ex) {
-                    Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-                header = connection.getHeaderFields();
-            }
         }
         return new Response(header, null);
     }
@@ -137,14 +100,16 @@ public class Rafson {
         try {
             URL url = new URL(uri);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
+            connection.setRequestMethod("HEAD");
             connection.setRequestProperty("Content-type", "application/json;charset=UTF-8");
             connection.setRequestProperty("Accept", "application/json");
             connection.setDoOutput(true);
             connection.setConnectTimeout(2000);
             connection.connect();
-            System.out.println("HEAD HTTP CODE" + connection.getResponseCode());
+
+            System.out.println("HEAD HTTP CODE " + connection.getResponseCode());
             header = connection.getHeaderFields();
+
             connection.disconnect();
         } catch (IOException ex) {
             Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
@@ -163,8 +128,10 @@ public class Rafson {
             connection.setDoOutput(true);
             connection.setConnectTimeout(2000);
             connection.connect();
-            System.out.println("DELETE HTTP CODE" + connection.getResponseCode());
+
+            System.out.println("DELETE HTTP CODE " + connection.getResponseCode());
             header = connection.getHeaderFields();
+
             connection.disconnect();
         } catch (IOException ex) {
             Logger.getLogger(Rafson.class.getName()).log(Level.SEVERE, null, ex);
