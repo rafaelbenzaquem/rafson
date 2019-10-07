@@ -10,7 +10,7 @@ import org.mockserver.integration.ClientAndServer;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockserver.integration.ClientAndProxy.startClientAndProxy;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
@@ -36,6 +36,45 @@ public class RafsonTest {
         mockServer.stop();
     }
 
+   
+    @Test
+    public void testConnectionRefused(){
+    
+        Response response = new Rafson().get("http://localhost:8080/clientess");
+        String actual = response.getBody();
+        assertEquals(null, actual);
+
+        String actual2 = response.getHeader().get(null).get(0);
+       assertTrue(actual2.contains("HTTP/1.1 404"));
+        
+    }
+    
+    @Test
+    public void testNotFound(){
+    
+        new MockServerClient("localhost", 1080)
+                .when(
+                        request()
+                                .withMethod("GET")
+                                .withPath("/test")
+                )
+                .respond(
+                        response()
+                                .withStatusCode(404)
+                                .withHeader(
+                                        "Location", "http://localhost"
+                                )
+                );
+        
+        Response response = new Rafson().get("http://localhost:1080/test");
+        String actual = response.getBody();
+        assertEquals(null, actual);
+
+        String actual2 = response.getHeader().get(null).get(0);
+        assertTrue(actual2.contains("HTTP/1.1 404"));
+        
+    }
+    
     @Test
     public void testRestGetResponseSuccess() {
         String expected = "{\"teste\":\"teste\"}";

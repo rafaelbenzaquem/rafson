@@ -1,12 +1,16 @@
 package com.rafson.http.verbs.strategy;
 
+import com.rafson.Rafson;
 import com.rafson.Response;
 import com.rafson.ResponseNull;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GetHttpStrategy extends HttpMethod {
 
@@ -52,9 +56,15 @@ public class GetHttpStrategy extends HttpMethod {
     @Override
     public Response strategyVerbMethod(HttpURLConnection connection) throws IOException {
         Response response = new ResponseNull();
-        response.setBody(getBody(connection.getInputStream()));
-        System.out.println("GET HTTP CODE " + connection.getResponseCode());
-        response.setHeader(connection.getHeaderFields());
+
+        try {
+            System.out.println("GET HTTP CODE " + connection.getResponseCode());
+            response.setHeader(connection.getHeaderFields());
+            response.setBody(getBody(connection.getInputStream()));
+        } catch (IOException  ex) {
+            
+            Logger.getLogger(GetHttpStrategy.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return response;
     }
 }
