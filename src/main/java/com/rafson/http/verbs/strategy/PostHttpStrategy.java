@@ -17,6 +17,13 @@ public class PostHttpStrategy extends HttpMethod {
     private Map<String, String> propertiesMap = new TreeMap<>();
     private String body;
 
+    public PostHttpStrategy() {
+        this.method = "POST";
+       this.connectionTimeout = 2000;
+        propertiesMap.put("Content-type", "application/json;charset=UTF-8");
+        propertiesMap.put("Accept", "application/json");
+    }
+
     public PostHttpStrategy(String body) {
         this.method = "POST";
         this.body = body;
