@@ -17,9 +17,19 @@ public class GetHttpStrategy extends HttpMethod {
     private String method;
     private int connectionTimeout;
     private Map<String, String> propertiesMap = new TreeMap<>();
+    private String body;
+
 
     public GetHttpStrategy() {
         this.method = "GET";
+        this.connectionTimeout = 2000;
+        propertiesMap.put("Content-type", "application/json;charset=UTF-8");
+        propertiesMap.put("Accept", "application/json");
+    }
+
+    public GetHttpStrategy(String body) {
+        this.method = "GET";
+        this.body = body;
         this.connectionTimeout = 2000;
         propertiesMap.put("Content-type", "application/json;charset=UTF-8");
         propertiesMap.put("Accept", "application/json");
@@ -56,10 +66,10 @@ public class GetHttpStrategy extends HttpMethod {
     @Override
     public Response strategyVerbMethod(HttpURLConnection connection) throws IOException {
         Response response = new ResponseNull();
-
+        if(body!=null)
+        setBody(body, connection.getOutputStream());
+        response.setHeader(connection.getHeaderFields());
         try {
-            System.out.println("GET HTTP CODE " + connection.getResponseCode());
-            response.setHeader(connection.getHeaderFields());
             response.setBody(getBody(connection.getInputStream()));
         } catch (IOException  ex) {
             
