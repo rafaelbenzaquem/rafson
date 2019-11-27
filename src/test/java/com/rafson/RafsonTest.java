@@ -7,10 +7,7 @@ import org.mockserver.client.server.MockServerClient;
 import org.mockserver.integration.ClientAndProxy;
 import org.mockserver.integration.ClientAndServer;
 
-import java.util.List;
-import java.util.Map;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockserver.integration.ClientAndProxy.startClientAndProxy;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
@@ -36,45 +33,6 @@ public class RafsonTest {
         mockServer.stop();
     }
 
-   
-    @Test
-    public void testConnectionRefused(){
-    
-        Response response = new Rafson().get("http://localhost:8080/clientess");
-        String actual = response.getBody();
-        assertEquals(null, actual);
-
-        String actual2 = response.getHeader().get(null).get(0);
-       assertTrue(actual2.contains("HTTP/1.1 404"));
-        
-    }
-    
-    @Test
-    public void testNotFound(){
-    
-        new MockServerClient("localhost", 1080)
-                .when(
-                        request()
-                                .withMethod("GET")
-                                .withPath("/test")
-                )
-                .respond(
-                        response()
-                                .withStatusCode(404)
-                                .withHeader(
-                                        "Location", "http://localhost"
-                                )
-                );
-        
-        Response response = new Rafson().get("http://localhost:1080/test");
-        String actual = response.getBody();
-        assertEquals(null, actual);
-
-        String actual2 = response.getHeader().get(null).get(0);
-        assertTrue(actual2.contains("HTTP/1.1 404"));
-        
-    }
-    
     @Test
     public void testRestGetResponseSuccess() {
         String expected = "{\"teste\":\"teste\"}";
@@ -98,7 +56,7 @@ public class RafsonTest {
         String actual = response.getBody();
         assertEquals(expected, actual);
 
-        String actual2 = response.getHeader().get(null).get(0);
+        String actual2 = response.getHeader().get("code").get(0);
         assertEquals("HTTP/1.1 200 OK", actual2);
 
     }
@@ -122,7 +80,7 @@ public class RafsonTest {
         String expected = response.getHeader().get("Location").get(0);
         assertEquals(expected, "http://localhost");
 
-        String expected2 =response.getHeader().get(null).get(0);
+        String expected2 =response.getHeader().get("code").get(0);
         assertEquals("HTTP/1.1 200 OK", expected2);
     }
 
@@ -158,7 +116,7 @@ public class RafsonTest {
                                 )
                 );
         Response response = new Rafson().post("http://localhost:1080/clientes", jsonInput);
-        String expected = response.getHeader().get(null).get(0);
+        String expected = response.getHeader().get("code").get(0);
         assertEquals("HTTP/1.1 201 Created", expected);
     }
 
@@ -190,8 +148,9 @@ public class RafsonTest {
                         response()
                                 .withStatusCode(204)
                 );
+
         Response response = new Rafson().put("http://localhost:1080/clientes/2", jsonInput);
-        String expected = response.getHeader().get(null).get(0);
+        String expected = response.getHeader().get("code").get(0);
         assertEquals("HTTP/1.1 204 No Content", expected);
     }
 
@@ -210,7 +169,7 @@ public class RafsonTest {
                 );
 
         Response response = new Rafson().delete("http://localhost:1080/client/2");
-        String expected = response.getHeader().get(null).get(0);
+        String expected = response.getHeader().get("code").get(0);
         assertEquals("HTTP/1.1 204 No Content", expected);
 
     }

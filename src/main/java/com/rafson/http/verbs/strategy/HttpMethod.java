@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -19,7 +20,7 @@ public abstract class HttpMethod {
 
     public abstract int getConnectionTimeout();
 
-    public abstract Response strategyVerbMethod(HttpURLConnection connection) throws IOException;
+    public abstract Response strategyVerbMethod(HttpURLConnection connection);
 
     protected String getBody(InputStream inputStream) {
         StringBuilder bodyBuilder = new StringBuilder();
@@ -36,4 +37,5 @@ public abstract class HttpMethod {
         os.flush();
         os.close();
     }
+
 }

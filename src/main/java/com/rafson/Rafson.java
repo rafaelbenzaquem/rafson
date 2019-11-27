@@ -16,23 +16,8 @@ public class Rafson {
         return response;
     }
 
-    public Response get(String uri, String body) {
-        Response response = templateHttpMethod(uri, new GetHttpStrategy(body));
-        return response;
-    }
-
-    public Response post(String uri) {
-        Response response = templateHttpMethod(uri, new PostHttpStrategy());
-        return response;
-    }
-
     public Response post(String uri, String body) {
         Response response = templateHttpMethod(uri, new PostHttpStrategy(body));
-        return response;
-    }
-
-    public Response put(String uri) {
-        Response response = templateHttpMethod(uri, new PutHttpStrategy());
         return response;
     }
 

@@ -50,10 +50,18 @@ public class DeleteHttpStrategy extends HttpMethod {
     }
 
     @Override
-    public Response strategyVerbMethod(HttpURLConnection connection) throws IOException {
+    public Response strategyVerbMethod(HttpURLConnection connection) {
         Response response = new ResponseNull();
-        System.out.println("DELETE HTTP CODE " + connection.getResponseCode());
+        String exceptionMessage[] = null;
+        try {
+            System.out.println("DELETE HTTP CODE " + connection.getResponseCode());
+        } catch (IOException e) {
+            exceptionMessage = e.toString().split(":");
+        }
         response.setHeader(connection.getHeaderFields());
+        if (exceptionMessage != null) {
+            response.putInHeader("exception", exceptionMessage);
+        }
         return response;
     }
 }
