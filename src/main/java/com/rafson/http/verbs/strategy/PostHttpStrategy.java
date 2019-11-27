@@ -59,7 +59,7 @@ public class PostHttpStrategy extends HttpMethod {
         String exceptionMessage[] = null;
         try {
             setBody(body, connection.getOutputStream());
-        } catch (IOException e)  {
+        } catch (Exception e)  {
             exceptionMessage = e.toString().split(":");
         }
         response.setHeader(connection.getHeaderFields());

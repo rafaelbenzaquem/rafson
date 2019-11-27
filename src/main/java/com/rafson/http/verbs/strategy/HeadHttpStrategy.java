@@ -55,7 +55,7 @@ public class HeadHttpStrategy extends HttpMethod {
         String exceptionMessage[] = null;
         try {
             System.out.println("HEAD HTTP CODE " + connection.getResponseCode());
-        } catch (IOException e)  {
+        } catch (Exception e)  {
             exceptionMessage = e.toString().split(":");
         }
         response.setHeader(connection.getHeaderFields());

@@ -55,7 +55,7 @@ public class DeleteHttpStrategy extends HttpMethod {
         String exceptionMessage[] = null;
         try {
             System.out.println("DELETE HTTP CODE " + connection.getResponseCode());
-        } catch (IOException e) {
+        } catch (Exception e) {
             exceptionMessage = e.toString().split(":");
         }
         response.setHeader(connection.getHeaderFields());

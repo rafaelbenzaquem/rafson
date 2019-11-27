@@ -55,7 +55,7 @@ public class GetHttpStrategy extends HttpMethod {
         String exceptionMessage[] = null;
         try {
             response.setBody(getBody(connection.getInputStream()));
-        } catch (IOException e)  {
+        } catch (Exception e)  {
             exceptionMessage = e.toString().split(":");
         }
         response.setHeader(connection.getHeaderFields());
