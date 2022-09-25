@@ -5,63 +5,53 @@ import com.rafson.ResponseNull;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class GetHttpStrategy extends HttpMethod {
 
-    private String method;
-    private int connectionTimeout;
-    private Map<String, String> propertiesMap = new TreeMap<>();
 
-    public GetHttpStrategy() {
-        this.method = "GET";
-        this.connectionTimeout = 2000;
-        propertiesMap.put("Content-type", "application/json;charset=UTF-8");
-        propertiesMap.put("Accept", "application/json");
+    public GetHttpStrategy(Builder builder) {
+        super(builder);
     }
 
-    public GetHttpStrategy(int connectionTimeout) {
-        this.method = "GET";
-        this.connectionTimeout = connectionTimeout;
-        propertiesMap.put("Content-type", "application/json;charset=UTF-8");
-        propertiesMap.put("Accept", "application/json");
-    }
-
-    public GetHttpStrategy(int connectionTimeout, Map<String, String> propertiesMap) {
-        this.method = "GET";
-        this.connectionTimeout = connectionTimeout;
-        this.propertiesMap = propertiesMap;
+    public static Builder builder(){
+        return new Builder()
+                .setConnectionTimeout(2000)
+                .putProperty("Content-type", "application/json;charset=UTF-8")
+                .putProperty("Accept", "application/json");
     }
 
     @Override
     public String getMethod() {
-        return method;
+        return METHOD_GET;
     }
 
     @Override
-    public int getConnectionTimeout() {
-        return connectionTimeout;
-    }
-
-    @Override
-    public Map<String, String> getPropertiesMap() {
-        return propertiesMap;
-    }
-
-    @Override
-    public Response strategyVerbMethod(HttpURLConnection connection) {
+    public Response strategyConnectionMethod(HttpURLConnection connection) {
         Response response = new ResponseNull();
-        String exceptionMessage[] = null;
+        String[] exceptionMessage = null;
+
         try {
             response.setBody(getBody(connection.getInputStream()));
-        } catch (Exception e)  {
-            exceptionMessage = e.toString().split(":");
+        } catch (IOException e) {
+                exceptionMessage = e.toString().split(":");
         }
+
         response.setHeader(connection.getHeaderFields());
         if (exceptionMessage != null) {
             response.putInHeader("exception", exceptionMessage);
         }
         return response;
+    }
+
+    public static class Builder extends HttpMethod.Builder<Builder> {
+        @Override
+        public GetHttpStrategy build() {
+            return new GetHttpStrategy(this);
+        }
+
+        @Override
+        Builder getThis() {
+            return this;
+        }
     }
 }
